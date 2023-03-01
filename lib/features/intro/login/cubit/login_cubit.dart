@@ -6,7 +6,8 @@ import 'package:meta/meta.dart';
 import '../../../../core/network/local/cache_helper.dart';
 import '../../../../core/widgets/navigation.dart';
 import '../../../../core/widgets/show_toast.dart';
-import '../../home/home_page.dart';
+import '../../home/layout_page/layout_cubit.dart';
+import '../../home/layout_page/layout_page.dart';
 
 part 'login_state.dart';
 
@@ -31,7 +32,7 @@ class LoginCubit extends Cubit<LoginState> {
       CacheHelper.saveData(key: 'uId', value: value.user!.uid);
       ShowToast(mes: "Login Successfully");
       emit(UserLoginSuccessState());
-      Navigation.navigatorAndFinished(context, HomePage());
+      Navigation.navigatorAndFinished(context, LayoutPage());
       print(value.user!.uid);
     }).catchError((error) {
       emit(UserLoginErrorState());

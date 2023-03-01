@@ -50,7 +50,11 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
     required String phone,
     required String uId
   })  {
-    SocialAppModel model =SocialAppModel(name, phone, email);
+    SocialAppModel model =SocialAppModel.name(name, phone, email,
+    'https://scontent.fcai19-4.fna.fbcdn.net/v/t39.30808-6/240805861_3102554376643653_8367513423742257604_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=13OXAIYFMvYAX-N5hx_&_nc_ht=scontent.fcai19-4.fna&oh=00_AfCu_iQxi0zV0fq5O1vqxVNYqg8KjaL1qZ9FEzAHF1IbSA&oe=6403071F'
+     ,'write your bio..',
+      'https://scontent.fcai19-4.fna.fbcdn.net/v/t39.30808-6/220333435_3074664919432599_1075936896868253467_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=174925&_nc_ohc=CpKuDgqnBccAX8sNPQc&_nc_ht=scontent.fcai19-4.fna&oh=00_AfCiaNcANSMlZg6YiFFYV8h7uqvKzP_lGc61rfJqEzTAQQ&oe=64039F7B'
+    );
     emit(CreateUserLodingState());
      FirebaseFirestore.instance.collection('users').doc(uId)
         .set(model.toMap())

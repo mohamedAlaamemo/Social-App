@@ -11,14 +11,14 @@ ThemeData lightmode=ThemeData(
       ),
       backgroundColor: Colors.white,
       elevation: 0.0,
-      titleTextStyle:  TextStyle(color: Colors.black),
+      titleTextStyle:  TextStyle(color: Colors.black,fontFamily: 'jannah',fontSize: 20),
       iconTheme:  IconThemeData(color: Colors.black,size: 30.0)
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Colors.teal,
-      backgroundColor: Colors.white12,
-      elevation: 20.0
+      backgroundColor: Colors.white,
+      elevation: 0.0
   ),
   textTheme: const TextTheme(
     bodyText1:  TextStyle(
