@@ -4,7 +4,7 @@ import 'package:social_media/core/network/local/cache_helper.dart';
 import 'package:social_media/core/shared/icon_broken.dart';
 import 'package:social_media/core/widgets/navigation.dart';
 import 'package:social_media/core/widgets/show_toast.dart';
-import 'package:social_media/features/intro/home/add_post/add_post.dart';
+import 'package:social_media/features/intro/home/add_post/add_post_page.dart';
 import 'package:social_media/features/intro/login/login_page.dart';
 
 import 'layout_cubit.dart';
@@ -17,7 +17,7 @@ class LayoutPage extends StatelessWidget {
     return BlocConsumer<LayoutCubit, LayoutState>(
       listener: (context, state) {
         // TODO: implement listener
-        if(state is LayoutAddPostState)
+        if(state is LayoutScreenOfAddPostState)
           {
             Navigation.navigatorTo(context,AddPost());
           }

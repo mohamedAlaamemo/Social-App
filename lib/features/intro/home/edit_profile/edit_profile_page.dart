@@ -20,7 +20,7 @@ class EditProfilePage extends StatelessWidget {
         // TODO: implement listener
         if(state is LayoutGetImageSuccessState)
           {
-            LayoutCubit.get(context).uploadImageProfile(
+            LayoutCubit.get(context).UploadImageProfile(
                 name: nameController.text,
                 bio: bioController.text,
                 phone: phoneController.text,
@@ -28,7 +28,7 @@ class EditProfilePage extends StatelessWidget {
           }
         if(state is LayoutGetImageCoverSuccessState)
           {
-            LayoutCubit.get(context).uploadImageCover(
+            LayoutCubit.get(context).UploadImageCover(
               name: nameController.text,
               bio: bioController.text,
               phone: phoneController.text,
@@ -37,9 +37,9 @@ class EditProfilePage extends StatelessWidget {
       },
       builder: (context, state) {
         var cubit =LayoutCubit.get(context);
-        nameController.text=cubit.model.name!;
-        bioController.text=cubit.model.bio!;
-        phoneController.text=cubit.model.phone!;
+        nameController.text=cubit.userModel.name!;
+        bioController.text=cubit.userModel.bio!;
+        phoneController.text=cubit.userModel.phone!;
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(onPressed: (){
@@ -54,7 +54,7 @@ class EditProfilePage extends StatelessWidget {
             actions: [
               TextButton(
                   onPressed: (){
-                    cubit.upDateUser(
+                    cubit.UpDateUser(
                         name: nameController.text,
                         bio: bioController.text,
                         phone: phoneController.text);
@@ -87,7 +87,7 @@ class EditProfilePage extends StatelessWidget {
                               child: Card(
                                 elevation: 0.0,
                                 child: CachedNetworkImage(
-                                  imageUrl: '${cubit.model.backGround}',
+                                  imageUrl: '${cubit.userModel.backGround}',
                                   placeholder: (context, url) =>
                                       Center(child: CircularProgressIndicator()),
                                   errorWidget: (context, url, error) => Icon(Icons.error),
@@ -99,8 +99,7 @@ class EditProfilePage extends StatelessWidget {
                             ),
                             IconButton(
                                 onPressed: (){
-                                  cubit.getImageCover();
-
+                                  cubit.GetImageCover();
                                 },
                                 icon: CircleAvatar(
                                     child: Icon(IconBroken.Camera),
@@ -119,14 +118,14 @@ class EditProfilePage extends StatelessWidget {
                                   .scaffoldBackgroundColor,
                               child: CircleAvatar(
                                 backgroundImage:CachedNetworkImageProvider(
-                                  '${cubit.model.image}'
+                                  '${cubit.userModel.image}'
                                 ),
                                 radius: 45,
                               ),
                             ),
                             IconButton(
                               onPressed: (){
-                                cubit.getImage();
+                                cubit.GetImage();
                               },
                               icon: CircleAvatar(
                                 child: Icon(IconBroken.Camera),

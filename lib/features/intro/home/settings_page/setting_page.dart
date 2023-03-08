@@ -30,7 +30,7 @@ class SittingPage extends StatelessWidget {
                       margin: EdgeInsets.symmetric(horizontal: 8.0),
                       elevation: 0.0,
                       child: CachedNetworkImage(
-                        imageUrl: '${cubit.model.backGround}',
+                        imageUrl: '${cubit.userModel.backGround}',
                         placeholder: (context, url) =>
                             Center(child: CircularProgressIndicator()),
                         errorWidget: (context, url, error) => Icon(Icons.error),
@@ -44,7 +44,7 @@ class SittingPage extends StatelessWidget {
                     radius: 50,
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage('${cubit.model.image}'),
+                      backgroundImage: NetworkImage('${cubit.userModel.image}'),
                       radius: 45,
                     ),
                   ),
@@ -52,14 +52,14 @@ class SittingPage extends StatelessWidget {
               ),
             ),
             Text(
-              '${cubit.model.name}',
+              '${cubit.userModel.name}',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             SizedBox(
               height: 5,
             ),
             Text(
-              '${cubit.model.bio}',
+              '${cubit.userModel.bio}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             SizedBox(

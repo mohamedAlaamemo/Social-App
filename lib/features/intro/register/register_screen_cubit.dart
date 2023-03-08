@@ -50,10 +50,14 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
     required String phone,
     required String uId
   })  {
-    SocialAppModel model =SocialAppModel.name(name, phone, email,
-    'https://scontent.fcai19-4.fna.fbcdn.net/v/t39.30808-6/240805861_3102554376643653_8367513423742257604_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=13OXAIYFMvYAX-N5hx_&_nc_ht=scontent.fcai19-4.fna&oh=00_AfCu_iQxi0zV0fq5O1vqxVNYqg8KjaL1qZ9FEzAHF1IbSA&oe=6403071F'
-     ,'write your bio..',
-      'https://scontent.fcai19-4.fna.fbcdn.net/v/t39.30808-6/220333435_3074664919432599_1075936896868253467_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=174925&_nc_ohc=CpKuDgqnBccAX8sNPQc&_nc_ht=scontent.fcai19-4.fna&oh=00_AfCiaNcANSMlZg6YiFFYV8h7uqvKzP_lGc61rfJqEzTAQQ&oe=64039F7B'
+    SocialAppModel model =SocialAppModel.name(
+        name: name,
+        phone: phone,
+        email: email,
+      image: 'https://img.freepik.com/free-photo/smiley-little-boy-isolated-pink_23-2148984798.jpg?w=996&t=st=1678108047~exp=1678108647~hmac=3ff9fcc7fea73a31233b202b5dc3c8a1d2191e9e75f523bfdea52c812fd42425',
+        bio: 'write your bio..',
+        backGround: 'https://img.freepik.com/free-photo/waist-up-portrait-handsome-serious-unshaven-male-keeps-hands-together-dressed-dark-blue-shirt-has-talk-with-interlocutor-stands-against-white-wall-self-confident-man-freelancer_273609-16320.jpg?w=996&t=st=1678100964~exp=1678101564~hmac=cc49d3afc087c12301555332994c1e07231ebcd5d83f62cb24d4e6acedd3c1f9'
+
     );
     emit(CreateUserLodingState());
      FirebaseFirestore.instance.collection('users').doc(uId)

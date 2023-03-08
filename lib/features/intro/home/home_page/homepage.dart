@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/core/model/social_model.dart';
+import 'package:social_media/core/model/post_model.dart';
 import 'package:social_media/core/shared/icon_broken.dart';
 import 'package:social_media/features/intro/home/layout_page/layout_cubit.dart';
 
@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 10.0),
                     elevation: 5.0,
                     child: CachedNetworkImage(
-                      imageUrl:'${cubit.model.backGround}',
+                      imageUrl:'${cubit.userModel.backGround}',
                       placeholder: (context, url) =>
                           Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) => Icon(Icons.error),
@@ -52,13 +52,13 @@ class HomePage extends StatelessWidget {
               ListView.separated(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemBuilder: (context, index) => BuildPostItem(context,cubit.model),
+                  itemBuilder: (context, index) => BuildPostItem(context,cubit.allPostList[index]),
                   separatorBuilder: (context, index) => SizedBox(
                         height: 1,
                       ),
-                  itemCount: 10),
+                  itemCount: cubit.allPostList.length),
               SizedBox(
-                height: 5,
+                height: 15,
               ),
             ],
           ),
@@ -68,12 +68,13 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Widget BuildPostItem(context,SocialAppModel model) {
+Widget BuildPostItem(context,CreateNewPostModel model) {
 
   return Card(
     margin: EdgeInsets.all(8.0),
-    elevation: 3,
+    elevation: 20,
     child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
@@ -111,7 +112,7 @@ Widget BuildPostItem(context,SocialAppModel model) {
                   ),
                   Text(
                     'January 22,2023,10:45 AM',
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -129,10 +130,10 @@ Widget BuildPostItem(context,SocialAppModel model) {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            'Date of Completion with respect to a Project shall mean: (i) the date upon which such Project and all components thereof have been acquired or constructed and are capable of performing the functions for which they were intended, as evidenced by an Engineers’ Certificate filed with the Trustee and the Issuer',
+            '${model.postText}',
             style: Theme.of(context)
                 .textTheme
-                .bodyText1
+                .bodyLarge
                 ?.copyWith(fontSize: 14, height: 1, fontFamily: 'jannah'),
           ),
         ),
@@ -151,7 +152,7 @@ Widget BuildPostItem(context,SocialAppModel model) {
                     '#Flutter Developer',
                     style: Theme.of(context)
                         .textTheme
-                        .caption
+                        .bodySmall
                         ?.copyWith(color: Colors.teal, height: 1),
                   ),
                 ),
@@ -160,12 +161,13 @@ Widget BuildPostItem(context,SocialAppModel model) {
             ],
           ),
         ),
-        Card(
+        if(model.postImage!='')
+          Card(
           margin: EdgeInsets.all(8.0),
           elevation: 5.0,
           child: CachedNetworkImage(
             imageUrl:
-            '${model.backGround}',
+            '${model.postImage}',
             placeholder: (context, url) =>
                 Center(child: CircularProgressIndicator()),
             errorWidget: (context, url, error) => Icon(Icons.error),
@@ -174,6 +176,8 @@ Widget BuildPostItem(context,SocialAppModel model) {
             fit: BoxFit.cover,
           ),
         ),
+        if(model.postImage!='')
+          SizedBox(height: 10,),
         Row(
           children: [
             Expanded(
@@ -196,7 +200,7 @@ Widget BuildPostItem(context,SocialAppModel model) {
                       ),
                       Text(
                         '1200',
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),
@@ -220,7 +224,7 @@ Widget BuildPostItem(context,SocialAppModel model) {
                         ),
                         Text(
                           '189 Comments',
-                          style: Theme.of(context).textTheme.caption,
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
@@ -248,7 +252,7 @@ Widget BuildPostItem(context,SocialAppModel model) {
                       padding: const EdgeInsets.only(left: 8.0),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
-                          '${model.image}',
+                          '${LayoutCubit.get(context).userModel.image}',
                         ),
                         radius: 20,
                       ),
@@ -258,7 +262,7 @@ Widget BuildPostItem(context,SocialAppModel model) {
                     ),
                     Text(
                       'Write Comments...',
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     SizedBox(
                       width: 10,
@@ -282,7 +286,7 @@ Widget BuildPostItem(context,SocialAppModel model) {
                       ),
                       Text(
                         'Love',
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),

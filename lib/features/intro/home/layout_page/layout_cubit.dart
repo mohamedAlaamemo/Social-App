@@ -7,11 +7,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_media/core/model/post_model.dart';
 import 'package:social_media/core/network/local/cache_helper.dart';
-import 'package:social_media/features/intro/home/add_post/add_post.dart';
+import 'package:social_media/features/intro/home/add_post/add_post_page.dart';
 import 'package:social_media/features/intro/home/home_page/homepage.dart';
 
 import '../../../../core/model/social_model.dart';
+import '../../../../core/widgets/show_toast.dart';
 import '../chat_page/chat_page.dart';
 import '../settings_page/setting_page.dart';
 import '../user_page/user_page.dart';
@@ -33,7 +35,7 @@ class LayoutCubit extends Cubit<LayoutState> {
 
   void ChangeScreen({required int index}) {
     if (index == 2) {
-      emit(LayoutAddPostState());
+      emit(LayoutScreenOfAddPostState());
     } else {
       currentIndex = index;
       emit(LayoutChangeScreenState());
@@ -41,7 +43,7 @@ class LayoutCubit extends Cubit<LayoutState> {
     print('currentIndex= $currentIndex');
   }
 
-  SocialAppModel model = SocialAppModel.name('', '', '', '', '', '');
+  SocialAppModel userModel = SocialAppModel.name();
 
   void GitUserData() {
     emit(LayoutGitUserDataLodingState());
@@ -51,7 +53,7 @@ class LayoutCubit extends Cubit<LayoutState> {
         .get()
         .then((value) {
       print(value.data());
-      model = SocialAppModel.fromJson(value.data()!);
+      userModel = SocialAppModel.fromJson(value.data()!);
       emit(LayoutGitUserDataSuccessState());
     }).catchError((error) {
       print(error);
@@ -64,7 +66,7 @@ class LayoutCubit extends Cubit<LayoutState> {
    File? imageProfile;
   final pickerCover = ImagePicker();
 
-  Future<void> getImage() async {
+  Future<void> GetImage() async {
     final pickedFile = await pickerCover.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         imageProfile = File(pickedFile.path);
@@ -77,7 +79,7 @@ class LayoutCubit extends Cubit<LayoutState> {
   }
   
   
-  void uploadImageProfile({
+  void UploadImageProfile({
     required String name,
     required String bio,
     required String phone,
@@ -92,7 +94,7 @@ class LayoutCubit extends Cubit<LayoutState> {
     .putFile(imageProfile!)
         .then((value) {
           value.ref.getDownloadURL().then((value) {
-            upDateUser(
+            UpDateUser(
                 name: name,
                 bio: bio,
                 phone: phone,
@@ -113,7 +115,7 @@ class LayoutCubit extends Cubit<LayoutState> {
   File? imageCover;
   final picker = ImagePicker();
 
-  Future<void> getImageCover() async {
+  Future<void> GetImageCover() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       imageCover = File(pickedFile.path);
@@ -124,7 +126,7 @@ class LayoutCubit extends Cubit<LayoutState> {
       print('No image selected.');
     }
   }
-  void uploadImageCover({
+  void UploadImageCover({
     required String name,
     required String bio,
     required String phone,
@@ -139,7 +141,7 @@ class LayoutCubit extends Cubit<LayoutState> {
         .putFile(imageCover!)
         .then((value) {
       value.ref.getDownloadURL().then((value) {
-        upDateUser(
+        UpDateUser(
             name: name,
             bio: bio,
             phone: phone,
@@ -158,7 +160,7 @@ class LayoutCubit extends Cubit<LayoutState> {
   }
 
 
-  void upDateUser({
+  void UpDateUser({
   required String name,
   required String bio,
   required String phone,
@@ -167,12 +169,12 @@ class LayoutCubit extends Cubit<LayoutState> {
 }){
     emit(LayoutUpDateUserLodingState());
     SocialAppModel model1 =SocialAppModel.name(
-        name,
-        phone,
-        model.email,
-        image??model.image,
-        bio,
-        cover??model.backGround
+        name: name,
+        phone: phone,
+        email: userModel.email,
+        image: image??userModel.image,
+        bio: bio,
+        backGround: cover??userModel.backGround
     );
     FirebaseFirestore.instance
         .collection('users')
@@ -185,5 +187,107 @@ class LayoutCubit extends Cubit<LayoutState> {
       emit(LayoutUpDateUserErrorState());
     });
 
+  }
+
+  void CreateNewPost({
+  required String date,
+    required String postText,
+    String postImage='',
+}){
+    emit(LayoutCreateNewPostLodingState());
+    CreateNewPostModel postModel=CreateNewPostModel.name(
+       name:userModel.name,
+        image: userModel.image,
+        postText: postText,
+        postImage:postImage,
+        date:date
+    );
+    FirebaseFirestore.instance
+        .collection('posts')
+        .add(postModel.toMap()).then((value) {
+      ShowToast(mes: 'Post Create Successfully');
+
+      emit(LayoutCreateNewPostSuccessState());
+    }).catchError((error){
+      emit(LayoutCreateNewPostErrorState());
+      print(error);
+    });
+  }
+
+  File? imageNewPost;
+  final pickerImageNewPost = ImagePicker();
+
+  Future<void> GetImageNewPost() async {
+    final pickedFile = await pickerImageNewPost.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      imageNewPost = File(pickedFile.path);
+      print(imageNewPost?.path);
+      emit(LayoutGetImageNewPostSuccessState());
+    } else {
+      emit(LayoutGetImageNewPostErrorState());
+      print('No image selected.');
+    }
+  }
+
+
+  void RemoveImageNewPost(){
+    imageNewPost=null;
+    emit(LayoutRemoveImageNewPostState());
+  }
+
+
+
+  void UploadImageNewPost({
+  required String date,
+    required String postText,
+})
+  {
+    dynamic path=imageNewPost?.path;
+    emit(LayoutUploadImageNewPostLodingState());
+    FirebaseStorage.instance
+        .ref()
+        .child('postsImage/${Uri.file(path!).pathSegments.last}')
+        .putFile(imageNewPost!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
+        emit(LayoutUploadImageNewPostSuccessState());
+      CreateNewPost(
+            date: date,
+            postText: postText,
+          postImage: value,
+        );
+      }).catchError((error){
+        emit(LayoutUploadImageNewPostErrorState());
+        print(error);
+      });
+      emit(LayoutUploadImageProfileSuccessState());
+    }).catchError((error){
+      emit(LayoutUploadImageProfileErrorState());
+      print(error);
+    });
+  }
+  
+  
+  
+  
+  
+  List<CreateNewPostModel>allPostList=[];
+  void GetAllPosts(){
+    emit(LayoutGetAllPostsLodingState());
+    allPostList=[];
+    FirebaseFirestore.instance
+        .collection('posts')
+        .get()
+        .then((value) {
+          value.docs.forEach((element) {
+            allPostList.add(CreateNewPostModel.fromJson(element.data()));
+          });
+          emit(LayoutGetAllPostsSuccessState());
+    })
+        .catchError((error){
+      emit(LayoutGetAllPostsErrorState());
+      print(error);
+    });
+    
   }
 }

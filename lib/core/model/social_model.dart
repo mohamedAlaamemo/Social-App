@@ -7,7 +7,13 @@ class SocialAppModel{
   String? backGround;
 
 
-  SocialAppModel.name(this.name, this.phone, this.email, this.image, this.bio,this.backGround);
+  SocialAppModel.name(
+      {this.name,
+      this.phone,
+      this.email,
+      this.image,
+      this.bio,
+      this.backGround});
 
   SocialAppModel.fromJson(Map<String, dynamic> json) {
       name=json["name"];

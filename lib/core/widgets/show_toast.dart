@@ -62,8 +62,8 @@ void ShowToast({
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      // backgroundColor: Colors.red,
-      // textColor: Colors.white,
+       backgroundColor: Colors.transparent,
+       textColor: Colors.teal,
       fontSize: 16.0
   );
 }
