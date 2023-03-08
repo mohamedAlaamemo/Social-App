@@ -272,15 +272,27 @@ class LayoutCubit extends Cubit<LayoutState> {
   
   
   List<CreateNewPostModel>allPostList=[];
+  List<String>postId=[];
+  List<int>postLikesCount=[];
   void GetAllPosts(){
     emit(LayoutGetAllPostsLodingState());
     allPostList=[];
+    postId=[];
     FirebaseFirestore.instance
         .collection('posts')
         .get()
         .then((value) {
           value.docs.forEach((element) {
-            allPostList.add(CreateNewPostModel.fromJson(element.data()));
+            element.reference
+            .collection('likes')
+            .get()
+            .then((value) {
+              postLikesCount.add(value.docs.length);
+              postId.add(element.id);
+              allPostList.add(CreateNewPostModel.fromJson(element.data()));
+            }).catchError((error){
+              print(error);
+            });
           });
           emit(LayoutGetAllPostsSuccessState());
     })
@@ -289,5 +301,34 @@ class LayoutCubit extends Cubit<LayoutState> {
       print(error);
     });
     
+  }
+
+
+
+
+  void LikePost({
+  required String postId
+}){
+
+    emit(LayoutLikePostLodingState());
+
+    FirebaseFirestore.instance
+    .collection('posts')
+    .doc(postId)
+    .collection('likes')
+    .doc(CacheHelper.getData(key: 'uId'))
+    .set({
+      'Likes':true
+    })
+    .then((value) {
+      emit(LayoutLikePostSuccessState());
+    })
+    .catchError((error){
+      emit(LayoutLikePostErrorState());
+      print(error);
+    });
+
+
+
   }
 }

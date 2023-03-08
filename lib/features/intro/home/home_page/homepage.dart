@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,58 +18,64 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         var cubit=LayoutCubit.get(context);
-        return SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              Stack(
-                alignment: AlignmentDirectional.bottomEnd,
+        return ConditionalBuilder(
+            condition: LayoutCubit.get(context).allPostList.length>0&&cubit.userModel!=null,
+            builder: (context)=>SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
                 children: [
-                  Card(
-                    margin: EdgeInsets.symmetric(horizontal: 10.0),
-                    elevation: 5.0,
-                    child: CachedNetworkImage(
-                      imageUrl:'${cubit.userModel.backGround}',
-                      placeholder: (context, url) =>
-                          Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                      width: double.infinity,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
+                  Stack(
+                    alignment: AlignmentDirectional.bottomEnd,
+                    children: [
+                      Card(
+                        margin: EdgeInsets.symmetric(horizontal: 10.0),
+                        elevation: 5.0,
+                        child: CachedNetworkImage(
+                          imageUrl:'${cubit.userModel.backGround}',
+                          placeholder: (context, url) =>
+                              Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          'Communicate with friends',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      'Communicate with friends',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ListView.separated(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) => BuildPostItem(context,cubit.allPostList[index],index),
+                      separatorBuilder: (context, index) => SizedBox(
+                        height: 1,
+                      ),
+                      itemCount: cubit.allPostList.length),
+                  SizedBox(
+                    height: 15,
                   ),
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              ListView.separated(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => BuildPostItem(context,cubit.allPostList[index]),
-                  separatorBuilder: (context, index) => SizedBox(
-                        height: 1,
-                      ),
-                  itemCount: cubit.allPostList.length),
-              SizedBox(
-                height: 15,
-              ),
-            ],
-          ),
+            ),
+            fallback: (context)=>Center(child: Text(
+              'NO Posts Yet'
+            ))
         );
       },
     );
   }
 }
 
-Widget BuildPostItem(context,CreateNewPostModel model) {
+Widget BuildPostItem(context,CreateNewPostModel model,index) {
 
   return Card(
     margin: EdgeInsets.all(8.0),
@@ -111,7 +118,7 @@ Widget BuildPostItem(context,CreateNewPostModel model) {
                     ],
                   ),
                   Text(
-                    'January 22,2023,10:45 AM',
+                    '${model.date}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -199,7 +206,7 @@ Widget BuildPostItem(context,CreateNewPostModel model) {
                         width: 3,
                       ),
                       Text(
-                        '1200',
+                        '${LayoutCubit.get(context).postLikesCount[index]}',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -273,7 +280,9 @@ Widget BuildPostItem(context,CreateNewPostModel model) {
             ),
             Expanded(
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  LayoutCubit.get(context).LikePost(postId: LayoutCubit.get(context).postId[index]);
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Row(

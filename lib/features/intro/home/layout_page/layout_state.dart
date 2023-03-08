@@ -63,3 +63,8 @@ class LayoutUploadImageNewPostErrorState extends LayoutState {}
 class LayoutGetAllPostsLodingState extends LayoutState {}
 class LayoutGetAllPostsSuccessState extends LayoutState {}
 class LayoutGetAllPostsErrorState extends LayoutState {}
+
+
+class LayoutLikePostLodingState extends LayoutState {}
+class LayoutLikePostSuccessState extends LayoutState {}
+class LayoutLikePostErrorState extends LayoutState {}
