@@ -29,7 +29,6 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      print(value.user!.email);
       CreateUser(
         context,
           email: email,
@@ -51,6 +50,7 @@ class RegisterScreenCubit extends Cubit<RegisterScreenState> {
     required String uId
   })  {
     SocialAppModel model =SocialAppModel.name(
+      uId: uId,
         name: name,
         phone: phone,
         email: email,

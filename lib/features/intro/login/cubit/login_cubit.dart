@@ -35,6 +35,7 @@ class LoginCubit extends Cubit<LoginState> {
       emit(UserLoginSuccessState());
       LayoutCubit.get(context).GitUserData();
       LayoutCubit.get(context).GetAllPosts();
+      LayoutCubit.get(context).currentIndex=0;
       Navigation.navigatorAndFinished(context, LayoutPage());
       print(value.user!.uid);
     }).catchError((error) {

@@ -68,3 +68,17 @@ class LayoutGetAllPostsErrorState extends LayoutState {}
 class LayoutLikePostLodingState extends LayoutState {}
 class LayoutLikePostSuccessState extends LayoutState {}
 class LayoutLikePostErrorState extends LayoutState {}
+
+
+class LayoutGetAllUsersLodingState extends LayoutState {}
+class LayoutGetAllUsersSuccessState extends LayoutState {}
+class LayoutGetAllUsersErrorState extends LayoutState {}
+
+
+class LayoutSendMessageLodingState extends LayoutState {}
+class LayoutSendMessageSuccessState extends LayoutState {}
+class LayoutSendMessageErrorState extends LayoutState {}
+
+
+class LayoutEmitState extends LayoutState {}
+class LayoutGetMessageInChatState extends LayoutState {}

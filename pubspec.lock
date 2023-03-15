@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  auto_direction:
+    dependency: "direct main"
+    description:
+      name: auto_direction
+      sha256: "5486041d6fae1cd9ca431217a3fa4699f9237a4218d295b421d384d9710f2ad4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   bloc:
     dependency: "direct main"
     description:
@@ -608,6 +616,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.5"
+  responsive_sizer:
+    dependency: "direct main"
+    description:
+      name: responsive_sizer
+      sha256: "1632edd443b9ace1b88b3eb3c0520cb610cc8dcf3710197f7e3a0c0f38aae508"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
   rxdart:
     dependency: transitive
     description:

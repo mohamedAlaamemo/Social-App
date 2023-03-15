@@ -5,6 +5,7 @@ class SocialAppModel{
   String? image;
   String? bio;
   String? backGround;
+  String? uId;
 
 
   SocialAppModel.name(
@@ -13,6 +14,7 @@ class SocialAppModel{
       this.email,
       this.image,
       this.bio,
+      this.uId,
       this.backGround});
 
   SocialAppModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class SocialAppModel{
       phone= json["phone"];
       email= json["email"];
       backGround= json["backGround"];
+      uId= json["uId"];
    }
 
   Map<String, dynamic> toMap() {
@@ -32,6 +35,7 @@ class SocialAppModel{
       "phone": this.phone,
       "email": this.email,
       "backGround": this.backGround,
+      "uId": this.uId,
     };
   }
 }

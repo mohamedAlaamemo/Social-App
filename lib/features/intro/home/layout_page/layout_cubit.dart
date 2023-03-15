@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_media/core/model/message_model.dart';
 import 'package:social_media/core/model/post_model.dart';
 import 'package:social_media/core/network/local/cache_helper.dart';
 import 'package:social_media/features/intro/home/add_post/add_post_page.dart';
@@ -22,6 +23,9 @@ part 'layout_state.dart';
 class LayoutCubit extends Cubit<LayoutState> {
   LayoutCubit() : super(LayoutInitial());
 
+  void EmitState(){
+    emit(LayoutEmitState());
+  }
   static LayoutCubit get(context) => BlocProvider.of(context);
   int currentIndex = 0;
   List<Widget> Screens = [
@@ -34,6 +38,10 @@ class LayoutCubit extends Cubit<LayoutState> {
   List<String> titles = ['Home', 'Chat', 'Post', 'Users', 'Settings'];
 
   void ChangeScreen({required int index}) {
+    if (index== 1)
+      {
+        GetAllUsers();
+      }
     if (index == 2) {
       emit(LayoutScreenOfAddPostState());
     } else {
@@ -41,6 +49,7 @@ class LayoutCubit extends Cubit<LayoutState> {
       emit(LayoutChangeScreenState());
     }
     print('currentIndex= $currentIndex');
+
   }
 
   SocialAppModel userModel = SocialAppModel.name();
@@ -178,7 +187,7 @@ class LayoutCubit extends Cubit<LayoutState> {
     );
     FirebaseFirestore.instance
         .collection('users')
-        .doc(CacheHelper.getData(key: 'uId'))
+        .doc(userModel.uId)
         .update(model1.toMap())
         .then((value) {
       GitUserData();
@@ -331,4 +340,98 @@ class LayoutCubit extends Cubit<LayoutState> {
 
 
   }
+
+
+
+  List<SocialAppModel>allUsersList=[];
+  void GetAllUsers(){
+    emit(LayoutGetAllUsersLodingState());
+    allUsersList=[];
+    FirebaseFirestore.instance
+    .collection('users')
+    .get()
+    .then((value) {
+      value.docs.forEach((element) {
+        if(userModel.uId!=element.id)
+          allUsersList.add(SocialAppModel.fromJson(element.data()));
+      });
+      emit(LayoutGetAllUsersSuccessState());
+    })
+    .catchError((error){
+      print(error);
+      emit(LayoutGetAllUsersErrorState());
+    });
+
+  }
+  
+  
+  
+  
+  
+  void SendMessage({
+  required String senderId,
+    required String? receiverId,
+    required String date,
+    required String textMessage,
+}){
+    emit(LayoutSendMessageLodingState());
+    SendMessageModel model=SendMessageModel.name(
+      date: date,
+      textMessage: textMessage,
+      senderId: senderId,
+      receiverId: receiverId
+    );
+    FirebaseFirestore.instance
+    .collection('users')
+    .doc(senderId)
+    .collection('chats')
+    .doc(receiverId)
+    .collection('message')
+    .add(model.toMap())
+        .then((value) {
+      emit(LayoutSendMessageSuccessState());
+    }).catchError((error){
+      emit(LayoutSendMessageErrorState());
+      print(error);
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('chats')
+        .doc(senderId)
+        .collection('message')
+        .add(model.toMap())
+        .then((value) {
+      emit(LayoutSendMessageSuccessState());
+    }).catchError((error){
+      emit(LayoutSendMessageErrorState());
+      print(error);
+    });
+  }
+
+
+  List<SendMessageModel>messageInChat=[];
+  void GetMessageInChat({
+    required String senderId,
+    required String? receiverId,
+}){
+    FirebaseFirestore.instance
+    .collection('users')
+    .doc(senderId)
+    .collection('chats')
+    .doc(receiverId)
+    .collection('message')
+    .orderBy('date')
+    .snapshots()
+    .listen((event) {
+      messageInChat=[];
+    event.docs.forEach((element) {
+        messageInChat.add(SendMessageModel.fromJson(element.data()));
+      });
+      emit(LayoutGetMessageInChatState());
+    });
+
+  }
+  
 }
